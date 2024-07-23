@@ -1,0 +1,30 @@
+Aylık Dagilim = 
+SUMX(
+    'hotel_bookings',
+    'hotel_bookings'[ortalama_fiyat] * ('hotel_bookings'[hafta_içi_kalinan_gece] + 'hotel_bookings'[haftasonu_kalinan_gece]) * ('hotel_bookings'[yetiskin] + 'hotel_bookings'[cocuk])
+)
+
+
+Doluluk = 
+COUNTROWS(
+    FILTER(
+        'hotel_bookings',
+        'hotel_bookings'[rezervasyon_durumu] = 0
+    )
+
+)
+
+
+Hangi ülkeden kaç ziyaret aldı = COUNTROWS(VALUES('hotel_bookings'[ülke]))
+
+
+OdaTurleriRezervasyonSayilari = 
+CONCATENATEX(
+    TOPN(
+        COUNTROWS('hotel_bookings'),
+        VALUES('hotel_bookings'[oda_tipi]),
+        CALCULATE(COUNTROWS('hotel_bookings'))
+    ),
+    'hotel_bookings'[oda_tipi] & " " & CALCULATE(COUNTROWS('hotel_bookings')) & ", ",
+    ""
+)
